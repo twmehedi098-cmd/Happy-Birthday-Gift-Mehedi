@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Special Gift For You 🎁</title>
+    <meta name="language" content="en">
+    <meta name="description" content="A gift full of love is waiting for you to discover! Tap to see the special wish!">
+
+    <!-- Favicon and Icons -->
+    <link rel="icon" href="./image/logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="./image/logo.png">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Special Gift For You 🎁">
+    <meta property="og:description"
+        content="A gift full of love is waiting for you to discover! Tap to see the special wish!">
+    <meta property="og:image" content="https://happybirthdaydeargift.vercel.app/image/logo.png">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Special Gift For You 🎁">
+    <meta name="twitter:description"
+        content="A gift full of love is waiting for you to discover! Tap to see the special wish!">
+    <meta name="twitter:image" content="https://happybirthdaydeargift.vercel.app/image/birthday-gift.jpg">
+
+    <link rel="icon" type="image/x-icon" href="https://cdn.jsdelivr.net/gh/sun0225SUN/photos/img/20210715233345.png">
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Birthday Wish Animation Overlay */
+        .birthday-wish-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 999999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 1s ease;
+        }
+        .birthday-wish-overlay.active {
+            display: flex;
+        }
+        .birthday-wish-card {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fdfcfb 100%);
+            border-radius: 30px;
+            padding: 50px 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(255,105,180,0.4);
+            animation: bounceIn 1s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .birthday-wish-card::before {
+            content: '🎉';
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            font-size: 80px;
+            opacity: 0.2;
+            transform: rotate(15deg);
+        }
+        .birthday-wish-card::after {
+            content: '🎁';
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            font-size: 100px;
+            opacity: 0.15;
+            transform: rotate(-10deg);
+        }
+        .birthday-wish-card .emoji-big {
+            font-size: 70px;
+            display: block;
+            margin-bottom: 10px;
+            animation: pulse 1.5s infinite;
+        }
+        .birthday-wish-card h1 {
+            font-family: 'Pacifico', cursive;
+            font-size: 2.2rem;
+            color: #ff1493;
+            margin: 10px 0;
+            text-shadow: 2px 2px 0 rgba(255,255,255,0.5);
+        }
+        .birthday-wish-card .wish-name {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: #c71585;
+            margin: 5px 0;
+            background: linear-gradient(45deg, #ff1493, #ff6b6b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .birthday-wish-card .wish-age {
+            font-size: 1.8rem;
+            color: #ff4500;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        .birthday-wish-card .wish-message {
+            font-size: 1.3rem;
+            color: #4a4a4a;
+            margin: 15px 0;
+            font-style: italic;
+            font-family: 'Dancing Script', cursive;
+            line-height: 1.6;
+        }
+        .birthday-wish-card .close-wish-btn {
+            margin-top: 20px;
+            padding: 12px 35px;
+            background: linear-gradient(45deg, #ff1493, #ff6b6b);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255,20,147,0.4);
+        }
+        .birthday-wish-card .close-wish-btn:hover {
+            transform: scale(1.05);
+        }
+        /* Confetti inside card */
+        .confetti-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0.7;
+            animation: confettiFall 3s linear infinite;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.95); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        @keyframes confettiFall {
+            0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(400px) rotate(720deg); opacity: 0; }
+        }
+        @media (max-width: 480px) {
+            .birthday-wish-card {
+                padding: 30px 20px;
+            }
+            .birthday-wish-card h1 {
+                font-size: 1.6rem;
+            }
+            .birthday-wish-card .wish-name {
+                font-size: 2.2rem;
+            }
+            .birthday-wish-card .wish-message {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="matrix-rain" style="display: none;"></canvas>
+    <canvas style="position:absolute;width:100%;height:100%;z-index:9999;display:none;" class="canvas"></canvas>
+    <div class="overlay">
+        <div class="stars-container" id="starsContainer"></div>
+        <img id="gift-image" src="happy.gif"
+            style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000; max-width: 80%; max-height: 80%;" />
+        <div class="content-display" id="contentDisplay">
+            <p id="contentText"></p>
+        </div>
+        <div class="firework-container" id="fireworkContainer"></div>
+        <div class="book-container">
+            <div class="book" id="book"></div>
+        </div>
+
+        <button class="music-control" id="musicControl" title="Play/Pause Music">
+            ▶
+        </button>
+
+        <button class="settings-button" id="settingsButton" title="Settings">
+            ⚙
+        </button>
+
+        <!-- Settings hint element -->
+        <div id="settingsHint" class="settings-hint">
+            <div class="hint-text">click here to customize settings</div>
+        </div>
+
+        <div id="settingsModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>⚙️ Website Settings</h2>
+                    <span class="close">×</span>
+                </div>
+                <div class="modal-body">
+                    <!-- Wish Link Generator with Age -->
+                    <div class="settings-section" style="
+                        margin-bottom: 16px;
+                        padding-bottom: 16px;
+                        border-bottom: 1px solid rgba(0,0,0,0.08);
+                    ">
+                        <h3>🎁 Create Birthday Wish Link</h3>
+                        <div class="form-group">
+                            <label for="wishName">Name:</label>
+                            <input type="text" id="wishName" placeholder="Enter name" style="
+                                width: 100%;
+                                padding: 10px 14px;
+                                border: 1px solid #dadce0;
+                                border-radius: 8px;
+                                font-size: 14px;
+                                margin-top: 4px;
+                            ">
+                        </div>
+                        <div class="form-group">
+                            <label for="wishAge">Age (turning):</label>
+                            <input type="number" id="wishAge" placeholder="Enter age" min="1" max="120" style="
+                                width: 100%;
+                                padding: 10px 14px;
+                                border: 1px solid #dadce0;
+                                border-radius: 8px;
+                                font-size: 14px;
+                                margin-top: 4px;
+                            ">
+                        </div>
+                        <div class="form-group">
+                            <label for="wishMessage">Wish Message:</label>
+                            <textarea id="wishMessage" rows="2" placeholder="Write your wish..." style="
+                                width: 100%;
+                                padding: 10px 14px;
+                                border: 1px solid #dadce0;
+                                border-radius: 8px;
+                                font-size: 14px;
+                                margin-top: 4px;
+                                resize: vertical;
+                                font-family: inherit;
+                            "></textarea>
+                        </div>
+                        <button id="generateWishLink" style="
+                            padding: 10px 20px;
+                            background: #ff69b4;
+                            color: #fff;
+                            border: none;
+                            border-radius: 8px;
+                            font-size: 15px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.2s;
+                            width: 100%;
+                        ">✨ Generate Wish Link</button>
+                        <div id="wishLinkResult" style="
+                            margin-top: 12px;
+                            padding: 12px;
+                            background: #f8f9fa;
+                            border-radius: 8px;
+                            display: none;
+                        ">
+                            <label style="font-weight: 500; display: block; margin-bottom: 6px;">Your Wish Link:</label>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <input type="text" id="wishLinkOutput" readonly style="
+                                    flex: 1;
+                                    padding: 8px 12px;
+                                    border: 1px solid #dadce0;
+                                    border-radius: 6px;
+                                    font-size: 13px;
+                                    background: #fff;
+                                ">
+                                <button id="copyWishLink" style="
+                                    padding: 8px 16px;
+                                    background: #1a73e8;
+                                    color: #fff;
+                                    border: none;
+                                    border-radius: 6px;
+                                    cursor: pointer;
+                                    font-size: 13px;
+                                    white-space: nowrap;
+                                ">📋 Copy</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>🎵 Audio Settings</h3>
+                        <div id="musicSystemBlock" class="music-mode-block">
+                            <div class="form-group">
+                                <label for="backgroundMusic">Background Music:</label>
+                                <div class="music-select-row">
+                                    <select id="backgroundMusic">
+                                        <option value="" disabled selected>Loading music list...</option>
+                                    </select>
+                                    <button type="button" id="musicPreviewButton" class="music-preview-btn">▶ Preview</button>
+                                </div>
+                                <span id="musicPreviewStatus" class="music-preview-status">Select a song and click "Preview"</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>⏰ Countdown Settings</h3>
+                        <div class="form-group">
+                            <label for="countdownTime">Countdown Time:</label>
+                            <select id="countdownTime">
+                                <option value="3">3 seconds</option>
+                                <option value="5" selected>5 seconds</option>
+                                <option value="10">10 seconds</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>🌧️ Matrix Rain Effect</h3>
+                        <div class="form-group">
+                            <label for="matrixText">Matrix Text:</label>
+                            <input type="text" id="matrixText" value="HAPPYBIRTHDAY"
+                                placeholder="Enter text for matrix rain effect">
+                        </div>
+                        <div class="form-group">
+                            <label>Color Theme:</label>
+                            <div class="color-theme-buttons">
+                                <button type="button" class="color-theme-btn active" data-theme="pink">
+                                    <div class="color-preview pink-preview"></div>
+                                    <span>Sweet Pink</span>
+                                </button>
+                                <button type="button" class="color-theme-btn" data-theme="blue">
+                                    <div class="color-preview blue-preview"></div>
+                                    <span>Cool Blue</span>
+                                </button>
+                                <button type="button" class="color-theme-btn" data-theme="purple">
+                                    <div class="color-preview purple-preview"></div>
+                                    <span>Dreamy Purple</span>
+                                </button>
+                                <button type="button" class="color-theme-btn" data-theme="custom">
+                                    <div class="color-preview custom-preview"></div>
+                                    <span>Custom Color</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-row" id="customColorSection" style="display: none;">
+                            <div class="form-group">
+                                <label for="matrixColor1">Matrix Color 1:</label>
+                                <input type="color" id="matrixColor1" value="#ff69b4">
+                            </div>
+                            <div class="form-group">
+                                <label for="matrixColor2">Matrix Color 2:</label>
+                                <input type="color" id="matrixColor2" value="#ff1493">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>✨ Main Text Settings</h3>
+                        <div class="form-group">
+                            <label for="sequenceText">Main Text Content:</label>
+                            <span style="color: rgb(132, 132, 132); font-weight: normal; font-size: 12px; display: block; margin-bottom: 5px;">
+                                Note: separate words with | to split into lines
+                            </span>
+                            <input type="text" id="sequenceText" value="HAPPY|BIRTHDAY|MY|CUTEE|LITTLE|SWARALI|❤"
+                                placeholder="Example: HAPPY|BIRTHDAY|..." style="width:100%; padding:10px 14px; border:1px solid #dadce0; border-radius:8px; font-size:14px;">
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3>🎁 Animation Settings</h3>
+                        <div class="form-group">
+                            <label for="giftImage">Animation (optional):</label>
+                            <select id="giftImage">
+                                <option value="">None</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="enableBook">Show Book:</label>
+                            <select id="enableBook">
+                                <option value="true">On</option>
+                                <option value="false">Off</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="bookSettingsSection">
+                            <label for="enableHeart">Show Heart Effect:</label>
+                            <select id="enableHeart">
+                                <option value="true">On</option>
+                                <option value="false">Off</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button id="applySettings" class="apply-settings-btn">🎉 Apply Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Birthday Wish Animation Overlay -->
+        <div id="birthdayWishOverlay" class="birthday-wish-overlay">
+            <div class="birthday-wish-card" id="birthdayWishCard">
+                <div class="confetti-container" id="confettiContainer"></div>
+                <span class="emoji-big">🎂</span>
+                <h1>🎉 Happy Birthday! 🎉</h1>
+                <div class="wish-name" id="displayWishName">Friend</div>
+                <div class="wish-age" id="displayWishAge">🎂 Turning <span id="displayAgeNum">0</span> years old! 🎂</div>
+                <div class="wish-message" id="displayWishMessage">Wishing you all the happiness in the world! 🌟</div>
+                <button class="close-wish-btn" id="closeWishBtn">💖 See the Surprise 💖</button>
+            </div>
+        </div>
+
+        <audio id="birthdayAudio" loop>
+            <source src="./music/happybirtday_uia.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+        <div class="copyright">
+            Website created by <a href="https://www.tiktok.com/@iamtritoan?is_from_webapp=1&sender_device=pc">iamtritoan</a>
+        </div>
+
+        <div id="orientation-lock">
+            <div class="phone-icon">
+                <img src="./image/screen.png" alt="">
+            </div>
+        </div>
+
+        <!-- Nút Full màn hình, chỉ hiện trên Android -->
+        <button id="fullscreenBtn" style="
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 990010;
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            background: #222;
+            color: #fff;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            cursor: pointer;
+            display: none;
+        ">
+            <img style="width: 20px; height: 20px; vertical-align: middle;" src="./image/full.png" alt="">
+        </button>
+
+        <script src="./jscp/detect-devtools.js"></script>
+        <script type='text/javascript'>
+            // Bypass for developers
+            const keyName = 'key';
+            const keyValue = '9ac7ec230e0e4513578f309d6d3579ad';
+
+            // Handle via config
+            DisableDevtool({
+                tkName: keyName,
+                md5: keyValue,
+                interval: '100',
+            });
+        </script>
+        <script src="./lang.js"></script>
+        <script src="./jscp/settings.js"></script>
+        <script src="./jscp/main.js"></script>
+        <script src="./jscp/ui.js"></script>
+
+        <script>
+            // ============================================
+            // BIRTHDAY WISH WITH NAME, AGE & ANIMATION
+            // ============================================
+            (function() {
+                const overlay = document.getElementById('birthdayWishOverlay');
+                const displayName = document.getElementById('displayWishName');
+                const displayAge = document.getElementById('displayAgeNum');
+                const displayMessage = document.getElementById('displayWishMessage');
+                const closeBtn = document.getElementById('closeWishBtn');
+
+                // --- Generate Confetti ---
+                function createConfetti() {
+                    const container = document.getElementById('confettiContainer');
+                    const colors = ['#ff1493', '#ff6b6b', '#ffd700', '#00b894', '#0984e3', '#fd79a8', '#fdcb6e'];
+                    for (let i = 0; i < 50; i++) {
+                        const piece = document.createElement('div');
+                        piece.className = 'confetti-piece';
+                        piece.style.left = Math.random() * 100 + '%';
+                        piece.style.top = Math.random() * 100 + '%';
+                        piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+                        piece.style.width = (Math.random() * 8 + 4) + 'px';
+                        piece.style.height = (Math.random() * 8 + 4) + 'px';
+                        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                        piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                        piece.style.animationDelay = (Math.random() * 2) + 's';
+                        container.appendChild(piece);
+                    }
+                }
+
+                // --- Read URL Parameters ---
+                function getWishFromURL() {
+                    const params = new URLSearchParams(window.location.search);
+                    return {
+                        name: params.get('wishName') || params.get('wishFrom') || null,
+                        age: params.get('wishAge') || null,
+                        message: params.get('wishMsg') || params.get('wishMessage') || null
+                    };
+                }
+
+                // --- Show Birthday Wish with Animation ---
+                function showBirthdayWish(name, age, message) {
+                    // Set values
+                    displayName.textContent = name || 'Friend';
+                    displayAge.textContent = age || '🎂';
+                    displayMessage.textContent = message || 'Wishing you all the happiness in the world! 🌟';
+
+                    // Create confetti
+                    createConfetti();
+
+                    // Show overlay
+                    overlay.classList.add('active');
+
+                    // Auto-close after 5 seconds if not clicked
+                    setTimeout(() => {
+                        if (overlay.classList.contains('active')) {
+                            closeWish();
+                        }
+                    }, 8000);
+                }
+
+                // --- Close Wish ---
+                function closeWish() {
+                    overlay.classList.remove('active');
+                    // Remove confetti to avoid memory leak
+                    document.getElementById('confettiContainer').innerHTML = '';
+                }
+
+                // --- Event Listeners ---
+                closeBtn.addEventListener('click', closeWish);
+                overlay.addEventListener('click', function(e) {
+                    if (e.target === overlay) {
+                        closeWish();
+                    }
+                });
+
+                // --- Auto-show on page load if URL has params ---
+                const wishData = getWishFromURL();
+                if (wishData.name || wishData.age || wishData.message) {
+                    // Wait a moment for page to load then show
+                    setTimeout(() => {
+                        showBirthdayWish(wishData.name, wishData.age, wishData.message);
+                    }, 1500);
+                }
+
+                // --- Link Generator with Age ---
+                const generateBtn = document.getElementById('generateWishLink');
+                const nameInput = document.getElementById('wishName');
+                const ageInput = document.getElementById('wishAge');
+                const messageInput = document.getElementById('wishMessage');
+                const resultDiv = document.getElementById('wishLinkResult');
+                const outputInput = document.getElementById('wishLinkOutput');
+                const copyBtn = document.getElementById('copyWishLink');
+
+                generateBtn.addEventListener('click', function() {
+                    const name = encodeURIComponent(nameInput.value.trim() || 'Friend');
+                    const age = encodeURIComponent(ageInput.value.trim() || '');
+                    const message = encodeURIComponent(messageInput.value.trim() || 'Happy Birthday! 🎉');
+
+                    const baseUrl = window.location.origin + window.location.pathname;
+                    let link = baseUrl + '?wishName=' + name;
+                    if (age) link += '&wishAge=' + age;
+                    if (message) link += '&wishMsg=' + message;
+
+                    outputInput.value = link;
+                    resultDiv.style.display = 'block';
+                });
+
+                copyBtn.addEventListener('click', function() {
+                    outputInput.select();
+                    outputInput.setSelectionRange(0, 99999);
+                    navigator.clipboard.writeText(outputInput.value).then(() => {
+                        const originalText = copyBtn.textContent;
+                        copyBtn.textContent = '✅ Copied!';
+                        setTimeout(() => {
+                            copyBtn.textContent = originalText;
+                        }, 2000);
+                    }).catch(() => {
+                        document.execCommand('copy');
+                        const originalText = copyBtn.textContent;
+                        copyBtn.textContent = '✅ Copied!';
+                        setTimeout(() => {
+                            copyBtn.textContent = originalText;
+                        }, 2000);
+                    });
+                });
+
+                // --- Auto-generate from URL on load (to fill form) ---
+                (function loadFromURL() {
+                    const data = getWishFromURL();
+                    if (data.name) nameInput.value = decodeURIComponent(data.name);
+                    if (data.age) ageInput.value = decodeURIComponent(data.age);
+                    if (data.message) messageInput.value = decodeURIComponent(data.message);
+                    if (data.name || data.age || data.message) {
+                        setTimeout(() => generateBtn.click(), 500);
+                    }
+                })();
+
+            })();
+        </script>
+</body>
+
+</html>
