@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Special Gift For You 🎁</title>
+    <meta name="language" content="en">
+    <meta name="description" content="A loving gift is waiting for you to discover! Click to see special wishes!">
+
+    <!-- Favicon and Icons -->
+    <link rel="icon" href="./image/logo.png" type="image/png">
+    <link rel="apple-touch-icon" href="./image/logo.png">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Special Gift For You 🎁">
+    <meta property="og:description"
+        content="A loving gift is waiting for you to discover! Click to see special wishes!">
+    <meta property="og:image" content="https://happybirthdaydeargift.vercel.app/image/logo.png">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Special Gift For You 🎁">
+    <meta name="twitter:description"
+        content="A loving gift is waiting for you to discover! Click to see special wishes!">
+    <meta name="twitter:image" content="https://happybirthdaydeargift.vercel.app/image/birthday-gift.jpg">
+
+    <link rel="icon" type="image/x-icon" href="https://cdn.jsdelivr.net/gh/sun0225SUN/photos/img/20210715233345.png">
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+</head>
+
+<body>
+    <button id="langSwitchBtn"
+        style="position:fixed;top:20px;right:150px;z-index:10000004;padding:8px 16px;border-radius:8px;background:#fff;color:#222;border:1px solid #dadce0;cursor:pointer;">
+        EN/VI
+    </button>
+    <canvas id="matrix-rain" style="display: none;"></canvas>
+    <canvas style="position:absolute;width:100%;height:100%;z-index:9999;display:none;" class="canvas"></canvas>
+    <div class="overlay">
+        <div class="stars-container" id="starsContainer"></div>
+        <img id="gift-image" src="happy.gif"
+            style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10000; max-width: 80%; max-height: 80%;" />
+        <div class="content-display" id="contentDisplay">
+            <p id="contentText"></p>
+        </div>
+        <div class="firework-container" id="fireworkContainer"></div>
+        <div class="book-container">
+            <div class="book" id="book"></div>
+        </div>
+
+        <button class="music-control" id="musicControl" title="Play/Pause Music">
+            ▶
+        </button>
+
+        <button class="settings-button" id="settingsButton" title="Settings">
+            ⚙
+        </button>
+
+        <!-- Settings hint element -->
+        <div id="settingsHint" class="settings-hint">
+            <div class="hint-text" data-i18n="settingsHint">Click here to customize settings</div>
+        </div>
+
+        <div id="settingsModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 data-i18n="settings">⚙️ Website Settings</h2>
+                    <span class="close">×</span>
+                </div>
+                <div class="modal-body">
+                    <!-- Account: top of Settings form -->
+                    <div id="googleAuthContainer" class="settings-section" style="
+                        margin-bottom: 16px;
+                        padding-bottom: 16px;
+                        border-bottom: 1px solid rgba(0,0,0,0.08);
+                        font-family: Arial, sans-serif;
+                    ">
+                        <button id="googleLoginBtn" style="
+                            display: flex;
+                            align-items: center;
+                            padding: 8px 14px;
+                            background: #fff;
+                            border: 1px solid #dadce0;
+                            border-radius: 24px;
+                            font-size: 14px;
+                            font-weight: 500;
+                            color: #3c4043;
+                            cursor: pointer;
+                            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+                            transition: all 0.2s ease;
+                        ">
+                            <svg width="18" height="18" viewBox="0 0 24 24" style="margin-right: 8px;">
+                                <path fill="#4285f4"
+                                    d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                                <path fill="#34a853"
+                                    d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                                <path fill="#fbbc05"
+                                    d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                                <path fill="#ea4335"
+                                    d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                            </svg>
+                            Sign in with Google
+                        </button>
+                        <div id="userInfo" style="
+                            display: none;
+                            flex-direction: column;
+                            align-items: stretch;
+                            padding: 10px 12px;
+                            background: #f8f9fa;
+                            border: 1px solid #e8eaed;
+                            border-radius: 12px;
+                            font-size: 14px;
+                            margin-top: 8px;
+                        ">
+                            <div style="display: flex; align-items: center;">
+                                <img id="userAvatar" style="width: 32px; height: 32px; border-radius: 50%; margin-right: 10px;">
+                                <div style="flex: 1; min-width: 0;">
+                                    <div id="userName" style="font-weight: 600; color: #202124;"></div>
+                                    <div id="userEmail" style="font-size: 12px; color: #5f6368;"></div>
+                                </div>
+                                <button id="logoutBtn"
+                                    style="padding: 6px 12px; background: #fff; border: 1px solid #dadce0; border-radius: 8px; font-size: 12px; cursor: pointer; color: #5f6368; font-weight: 500;"
+                                    data-i18n="logout">Sign out</button>
+                            </div>
+                            <button type="button" id="btnOrderHistory"
+                                style="margin-top: 8px; padding: 8px 12px; background: #fff; border: 1px solid #dadce0; border-radius: 8px; font-size: 13px; cursor: pointer; color: #1a73e8; font-weight: 500; text-align: center;"
+                                data-i18n="orderHistory">📋 Order History</button>
+                        </div>
+                    </div>
+                    
+                    <!-- ===== SHARE WISH SECTION - PINK VIBE ===== -->
+                    <div class="settings-section" id="shareWishSection" style="
+                        margin-bottom: 16px;
+                        padding: 16px;
+                        padding-bottom: 20px;
+                        border-radius: 16px;
+                        background: linear-gradient(135deg, #fff5f7 0%, #ffe4ec 100%);
+                        border: 2px solid #ffb6c1;
+                        box-shadow: 0 4px 15px rgba(255, 105, 180, 0.15);
+                    ">
+                        <h3 style="color: #d6336c; font-family: 'Pacifico', cursive; font-size: 22px; margin-top: 0;">💝 Share A Wish</h3>
+                        <p style="font-size: 13px; color: #9c4a5a; margin: 0 0 12px 0; font-weight: 500;">
+                            Create a personalized link to share with someone special! They'll see a beautiful wish just for them. ✨
+                        </p>
+                        <div class="form-group">
+                            <label for="recipientName" style="color: #b3415a; font-weight: 600;">Recipient's Name:</label>
+                            <input type="text" id="recipientName" placeholder="e.g. Swarnali" 
+                                style="border: 2px solid #ffb6c1; border-radius: 10px; padding: 10px 14px; font-size: 14px; background: #fff; width: 100%; box-sizing: border-box; transition: border-color 0.3s;">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipientBirthday" style="color: #b3415a; font-weight: 600;">Birthday (optional):</label>
+                            <input type="date" id="recipientBirthday" 
+                                style="border: 2px solid #ffb6c1; border-radius: 10px; padding: 10px 14px; font-size: 14px; background: #fff; width: 100%; box-sizing: border-box;">
+                        </div>
+                        <div class="form-group">
+                            <label for="recipientPhone" style="color: #b3415a; font-weight: 600;">Phone Number (optional):</label>
+                            <input type="tel" id="recipientPhone" placeholder="e.g. +880123456789" 
+                                style="border: 2px solid #ffb6c1; border-radius: 10px; padding: 10px 14px; font-size: 14px; background: #fff; width: 100%; box-sizing: border-box;">
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;">
+                            <button type="button" id="generateShareLinkBtn" style="
+                                padding: 10px 20px;
+                                background: linear-gradient(135deg, #ff6b8a, #ff4d7a);
+                                color: #fff;
+                                border: none;
+                                border-radius: 25px;
+                                cursor: pointer;
+                                font-weight: 600;
+                                font-size: 14px;
+                                box-shadow: 0 4px 15px rgba(255, 77, 122, 0.3);
+                                transition: all 0.3s ease;
+                            ">🔗 Generate Link</button>
+                            <button type="button" id="copyShareLinkBtn" style="
+                                padding: 10px 20px;
+                                background: linear-gradient(135deg, #ff8a9b, #ff6b8a);
+                                color: #fff;
+                                border: none;
+                                border-radius: 25px;
+                                cursor: pointer;
+                                font-weight: 600;
+                                font-size: 14px;
+                                box-shadow: 0 4px 15px rgba(255, 107, 138, 0.3);
+                                transition: all 0.3s ease;
+                                display: none;
+                            ">📋 Copy Link</button>
+                            <button type="button" id="shareViaSmsBtn" style="
+                                padding: 10px 20px;
+                                background: linear-gradient(135deg, #ff9a9e, #ff6b8a);
+                                color: #fff;
+                                border: none;
+                                border-radius: 25px;
+                                cursor: pointer;
+                                font-weight: 600;
+                                font-size: 14px;
+                                box-shadow: 0 4px 15px rgba(255, 107, 138, 0.3);
+                                transition: all 0.3s ease;
+                                display: none;
+                            ">💬 Share via WhatsApp</button>
+                        </div>
+                        <div id="shareLinkDisplay" style="
+                            margin-top: 12px;
+                            padding: 10px 14px;
+                            background: rgba(255, 255, 255, 0.8);
+                            border-radius: 10px;
+                            font-size: 12px;
+                            color: #4a2a2a;
+                            word-break: break-all;
+                            display: none;
+                            border: 2px dashed #ffb6c1;
+                            font-weight: 500;
+                        "></div>
+                        <div id="shareStatus" style="
+                            margin-top: 8px;
+                            font-size: 12px;
+                            color: #9c4a5a;
+                            font-weight: 500;
+                            display: none;
+                        "></div>
+                    </div>
+                    <!-- ===== END SHARE WISH SECTION ===== -->
+
+                    <div class="settings-section">
+                        <h3 data-i18n="music">🎵 Music Settings</h3>
+                        <!-- Default: system music -->
+                        <div id="musicSystemBlock" class="music-mode-block">
+                            <div class="form-group">
+                                <label for="backgroundMusic" data-i18n="backgroundMusic">Background Music:</label>
+                                <div class="music-select-row">
+                                    <select id="backgroundMusic">
+                                        <option value="" disabled selected>Loading playlist...</option>
+                                    </select>
+                                    <button type="button" id="musicPreviewButton" class="music-preview-btn">▶ Preview</button>
+                                </div>
+                                <span id="musicPreviewStatus" class="music-preview-status">Select a song and click "Preview"</span>
+                                <button type="button" id="musicSwitchToFile" class="music-switch-link" style="margin-top:8px;background:none;border:none;color:#1a73e8;cursor:pointer;font-size:13px;padding:0;text-decoration:underline;" data-i18n="musicSwitchToFile">📤 Upload your own file</button>
+                            </div>
+                        </div>
+                        <!-- Hidden by default: file upload -->
+                        <div id="musicFileBlock" class="music-mode-block" style="display: none;">
+                            <div class="form-group">
+                                <label data-i18n="musicUploadFile">Upload audio file</label>
+                                <div class="music-upload-row" style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="file" id="musicUploadInput" accept="audio/*" style="display: none;">
+                                    <button type="button" id="musicUploadBtn" class="music-upload-btn" style="padding: 8px 14px; border-radius: 8px; border: 1px solid #dadce0; background: #fff; cursor: pointer; font-size: 13px;">📤 Choose file & upload</button>
+                                </div>
+                                <button type="button" id="musicSwitchToSystem" class="music-switch-link" style="margin-top:8px;background:none;border:none;color:#1a73e8;cursor:pointer;font-size:13px;padding:0;text-decoration:underline;" data-i18n="musicSwitchToSystem">← Use system music</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3 data-i18n="countdown">⏰ Countdown Settings</h3>
+                        <div class="form-group">
+                            <label for="countdownTime" data-i18n="countdownTime">Countdown Time:</label>
+                            <select id="countdownTime">
+                                <option value="3" data-i18n="sec3">3 seconds</option>
+                                <option value="5" data-i18n="sec5">5 seconds</option>
+                                <option value="10" data-i18n="sec10">10 seconds</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3 data-i18n="matrix">🌧️ Matrix Rain Effect</h3>
+                        <div class="form-group">
+                            <label for="matrixText" data-i18n="matrixText">Matrix rain text:</label>
+                            <input type="text" id="matrixText" value="HAPPYBIRTHDAY"
+                                placeholder="Enter text for matrix rain" data-i18n-placeholder="matrixText">
+                        </div>
+                        <div class="form-group">
+                            <label data-i18n="colorTheme">Color theme:</label>
+                            <div class="color-theme-buttons">
+                                <button type="button" class="color-theme-btn active" data-theme="pink">
+                                    <div class="color-preview pink-preview"></div>
+                                    <span data-i18n="pinkTheme">Sweet Pink</span>
+                                </button>
+                                <button type="button" class="color-theme-btn" data-theme="blue">
+                                    <div class="color-preview blue-preview"></div>
+                                    <span data-i18n="blueTheme">Cool Blue</span>
+                                </button>
+                                <button type="button" class="color-theme-btn" data-theme="purple">
+                                    <div class="color-preview purple-preview"></div>
+                                    <span data-i18n="purpleTheme">Dreamy Purple</span>
+                                </button>
+                                <button type="button" class="color-theme-btn" data-theme="custom">
+                                    <div class="color-preview custom-preview"></div>
+                                    <span data-i18n="customTheme">Custom Color</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-row" id="customColorSection" style="display: none;">
+                            <div class="form-group">
+                                <label for="matrixColor1" data-i18n="matrixColor1">Matrix Color 1:</label>
+                                <input type="color" id="matrixColor1" value="#ff69b4">
+                            </div>
+                            <div class="form-group">
+                                <label for="matrixColor2" data-i18n="matrixColor2">Matrix Color 2:</label>
+                                <input type="color" id="matrixColor2" value="#ff1493">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3 data-i18n="sequence">✨ Main Text Sequence</h3>
+                        <div class="form-group">
+                            <label for="sequenceText" data-i18n="sequenceText">Main Text Content:</label>
+                            <span data-i18n="noteSequence"
+                                style="color: rgb(132, 132, 132); font-weight: normal; font-size: 12px; display: block; margin-bottom: 5px;">
+                                Note: separate words with | to split lines, don't make a line too long
+                            </span>
+                            <input type="text" id="sequenceText" value="HAPPY|BIRTHDAY|MY|CUTEE|LITTLE|SWARALI|❤"
+                                placeholder="Example: HAPPY|BIRTHDAY|..." data-i18n-placeholder="sequenceText">
+                        </div>
+                        <div class="form-group" id="sequenceColorSection" style="display: none;">
+                            <label for="sequenceColor" data-i18n="sequenceColor">Main Text Color:</label>
+                            <input type="color" id="sequenceColor" value="#ff69b4">
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h3 data-i18n="gift">🎁 Animation Settings</h3>
+                        <div class="form-group">
+                            <label for="giftImage" data-i18n="giftImage">Animation (optional):</label>
+                            <select id="giftImage">
+                                <option value="" data-i18n="noGif">None</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="enableBook" data-i18n="enableBook">Show Book:</label>
+                        <select id="enableBook">
+                            <option value="true" data-i18n="on">On</option>
+                            <option value="false" data-i18n="off">Off</option>
+                        </select>
+                    </div>
+                    <div class="settings-section" id="bookSettingsSection">
+                        <h3 data-i18n="book">📖 Book Page Settings</h3>
+                        <div id="pageConfigs">
+                        </div>
+                        <div class="form-group">
+                            <label for="enableHeart" data-i18n="enableHeart">Show heart effect:</label>
+                            <select id="enableHeart">
+                                <option value="true" data-i18n="on">On</option>
+                                <option value="false" data-i18n="off">Off</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- REMOVED: payment related options (isSave, expire date, follow note, notVietnamWarning) -->
+                    <button id="applySettings" class="apply-settings-btn" data-i18n="apply">🎉 Apply Settings</button>
+                </div>
+            </div>
+        </div>
+
+        <audio id="birthdayAudio" loop>
+            <source src="./music/happybirtday_uia.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+        <div class="copyright" data-i18n="copyright">
+            Website created by tiktok: <a
+                href="https://www.tiktok.com/@iamtritoan?is_from_webapp=1&sender_device=pc">iamtritoan</a>
+        </div>
+
+        <div id="orientation-lock">
+            <div class="phone-icon">
+                <img src="./image/screen.png" alt="">
+            </div>
+        </div>
+        <!-- Order History Modal -->
+        <div id="orderHistoryModal" class="modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100002; align-items: center; justify-content: center;">
+            <div style="background: #fff; border-radius: 12px; max-width: 480px; width: 90%; max-height: 85vh; overflow: hidden; box-shadow: 0 4px 24px rgba(0,0,0,0.15); display: flex; flex-direction: column;">
+                <div style="padding: 16px 20px; border-bottom: 1px solid #e8eaed; display: flex; align-items: center; justify-content: space-between;">
+                    <h3 style="margin: 0; font-size: 18px;" data-i18n="orderHistoryTitle">📋 Order History</h3>
+                    <button type="button" id="orderHistoryModalClose" style="background: none; border: none; font-size: 24px; cursor: pointer; color: #5f6368; line-height: 1;">×</button>
+                </div>
+                <div id="orderHistoryContent" style="padding: 16px; overflow-y: auto; flex: 1; min-height: 120px;">
+                    <div class="order-history-spinner" style="text-align: center; padding: 24px; color: #5f6368;">Loading...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Fullscreen button, only visible on Android -->
+        <button id="fullscreenBtn" style="
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 990010;
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: none;
+    background: #222;
+    color: #fff;
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    cursor: pointer;
+    display: none;
+">
+            <img style="
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+" src="./image/full.png" alt="">
+        </button>
+
+        <script src="./jscp/detect-devtools.js"></script>
+        <script type='text/javascript'>
+            // Bypass for developers
+            const keyName = 'key';
+            const keyValue = '9ac7ec230e0e4513578f309d6d3579ad';
+
+            // Handle via config
+            DisableDevtool({
+                tkName: keyName,
+                md5: keyValue,
+                interval: '100',
+            });
+        </script>
+        <script src="./lang.js"></script>
+        <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+        <script src="./jscp/api.obf.js"></script>
+        <script src="./jscp/auth.obf.js"></script>
+        <script src="./jscp/order-history.js"></script>
+        <script src="./jscp/voucher.obf.js"></script>
+        <script src="./jscp/settings.js"></script>
+        <script src="./jscp/main.js"></script>
+        <script src="./jscp/ui.js"></script>
+
+        <!-- ===== SHARE WISH SCRIPT ===== -->
+        <script>
+        (function() {
+            // Wait for DOM ready
+            document.addEventListener('DOMContentLoaded', function() {
+                const recipientName = document.getElementById('recipientName');
+                const recipientBirthday = document.getElementById('recipientBirthday');
+                const recipientPhone = document.getElementById('recipientPhone');
+                const generateBtn = document.getElementById('generateShareLinkBtn');
+                const copyBtn = document.getElementById('copyShareLinkBtn');
+                const smsBtn = document.getElementById('shareViaSmsBtn');
+                const linkDisplay = document.getElementById('shareLinkDisplay');
+                const shareStatus = document.getElementById('shareStatus');
+
+                let generatedLink = '';
+
+                function buildShareLink() {
+                    const name = recipientName.value.trim();
+                    if (!name) {
+                        shareStatus.textContent = '⚠️ Please enter the recipient\'s name!';
+                        shareStatus.style.display = 'block';
+                        shareStatus.style.color = '#d6336c';
+                        return null;
+                    }
+                    const birthday = recipientBirthday.value;
+                    const phone = recipientPhone.value.trim();
+
+                    // Build current URL without query params
+                    const baseUrl = window.location.href.split('?')[0];
+                    const params = new URLSearchParams();
+                    params.set('name', encodeURIComponent(name));
+                    if (birthday) params.set('birthday', birthday);
+                    if (phone) params.set('phone', encodeURIComponent(phone));
+                    // Add a flag so the page knows it's a shared wish
+                    params.set('wish', '1');
+
+                    return baseUrl + '?' + params.toString();
+                }
+
+                generateBtn.addEventListener('click', function() {
+                    const link = buildShareLink();
+                    if (!link) return;
+                    generatedLink = link;
+                    linkDisplay.textContent = link;
+                    linkDisplay.style.display = 'block';
+                    copyBtn.style.display = 'inline-block';
+                    smsBtn.style.display = 'inline-block';
+                    shareStatus.textContent = '✅ Link generated successfully!';
+                    shareStatus.style.display = 'block';
+                    shareStatus.style.color = '#34a853';
+                });
+
+                copyBtn.addEventListener('click', function() {
+                    if (!generatedLink) return;
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(generatedLink).then(() => {
+                            shareStatus.textContent = '✅ Link copied to clipboard!';
+                            shareStatus.style.display = 'block';
+                            shareStatus.style.color = '#34a853';
+                        }).catch(() => {
+                            // Fallback
+                            const textArea = document.createElement('textarea');
+                            textArea.value = generatedLink;
+                            document.body.appendChild(textArea);
+                            textArea.select();
+                            document.execCommand('copy');
+                            document.body.removeChild(textArea);
+                            shareStatus.textContent = '✅ Link copied to clipboard!';
+                            shareStatus.style.display = 'block';
+                            shareStatus.style.color = '#34a853';
+                        });
+                    } else {
+                        const textArea = document.createElement('textarea');
+                        textArea.value = generatedLink;
+                        document.body.appendChild(textArea);
+                        textArea.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(textArea);
+                        shareStatus.textContent = '✅ Link copied to clipboard!';
+                        shareStatus.style.display = 'block';
+                        shareStatus.style.color = '#34a853';
+                    }
+                });
+
+                smsBtn.addEventListener('click', function() {
+                    if (!generatedLink) return;
+                    // Get phone if available, otherwise just share via WhatsApp
+                    const phone = recipientPhone.value.trim();
+                    let url = 'https://wa.me/';
+                    if (phone) {
+                        // Remove any non-digit characters
+                        const cleanPhone = phone.replace(/\D/g, '');
+                        url += cleanPhone;
+                    }
+                    // Add the link as a message
+                    const message = encodeURIComponent(
+                        `🎁 You've received a special wish! Click here: ${generatedLink}`
+                    );
+                    url += '?text=' + message;
+                    window.open(url, '_blank');
+                });
+
+                // ===== HANDLE INCOMING SHARED WISH =====
+                function handleSharedWish() {
+                    const params = new URLSearchParams(window.location.search);
+                    const isWish = params.get('wish');
+                    if (!isWish) return;
+
+                    const name = params.get('name') || '';
+                    const birthday = params.get('birthday') || '';
+                    const phone = params.get('phone') || '';
+
+                    // Decode name and phone (they were encoded)
+                    const decodedName = decodeURIComponent(name);
+                    const decodedPhone = decodeURIComponent(phone);
+
+                    if (decodedName) {
+                        // Create a special personalized message overlay with pink theme
+                        const overlay = document.createElement('div');
+                        overlay.id = 'wishOverlay';
+                        overlay.style.cssText = `
+                            position: fixed;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            z-index: 99999;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            background: rgba(0,0,0,0.6);
+                            pointer-events: none;
+                            animation: fadeIn 0.8s ease;
+                            backdrop-filter: blur(4px);
+                        `;
+                        
+                        // Add some styles for animation
+                        const style = document.createElement('style');
+                        style.textContent = `
+                            @keyframes fadeIn {
+                                from { opacity: 0; transform: scale(0.9); }
+                                to { opacity: 1; transform: scale(1); }
+                            }
+                            @keyframes pulse {
+                                0% { transform: scale(1); }
+                                50% { transform: scale(1.03); }
+                                100% { transform: scale(1); }
+                            }
+                            @keyframes float {
+                                0%, 100% { transform: translateY(0); }
+                                50% { transform: translateY(-10px); }
+                            }
+                        `;
+                        document.head.appendChild(style);
+
+                        const messageBox = document.createElement('div');
+                        messageBox.style.cssText = `
+                            background: linear-gradient(135deg, #fff5f7 0%, #ffd6e0 50%, #ffb6c9 100%);
+                            padding: 45px 55px;
+                            border-radius: 30px;
+                            box-shadow: 0 25px 70px rgba(255, 77, 122, 0.4);
+                            text-align: center;
+                            max-width: 92%;
+                            pointer-events: auto;
+                            animation: pulse 2.5s infinite ease-in-out;
+                            border: 4px solid rgba(255, 255, 255, 0.6);
+                            position: relative;
+                            overflow: hidden;
+                        `;
+
+                        // Decorative hearts background
+                        const heartsBg = document.createElement('div');
+                        heartsBg.style.cssText = `
+                            position: absolute;
+                            top: -20px;
+                            right: -20px;
+                            font-size: 80px;
+                            opacity: 0.1;
+                            color: #d6336c;
+                            transform: rotate(15deg);
+                        `;
+                        heartsBg.textContent = '❤️';
+                        messageBox.appendChild(heartsBg);
+
+                        const heartsBg2 = document.createElement('div');
+                        heartsBg2.style.cssText = `
+                            position: absolute;
+                            bottom: -30px;
+                            left: -30px;
+                            font-size: 100px;
+                            opacity: 0.1;
+                            color: #d6336c;
+                            transform: rotate(-10deg);
+                        `;
+                        heartsBg2.textContent = '💕';
+                        messageBox.appendChild(heartsBg2);
+
+                        const title = document.createElement('h1');
+                        title.style.cssText = `
+                            font-family: 'Pacifico', cursive;
+                            font-size: clamp(32px, 7vw, 56px);
+                            color: #d6336c;
+                            margin: 0 0 10px 0;
+                            text-shadow: 3px 3px 6px rgba(214, 51, 108, 0.2);
+                            position: relative;
+                            z-index: 1;
+                        `;
+                        title.textContent = `🎂 Happy Birthday ${decodedName}! 🎂`;
+
+                        const sub = document.createElement('p');
+                        sub.style.cssText = `
+                            font-size: clamp(16px, 2.5vw, 24px);
+                            color: #8a3a4a;
+                            margin: 8px 0 0 0;
+                            font-weight: 600;
+                            position: relative;
+                            z-index: 1;
+                        `;
+                        if (birthday) {
+                            const bDate = new Date(birthday);
+                            const formatted = bDate.toLocaleDateString('en-US', { 
+                                month: 'long', 
+                                day: 'numeric',
+                                year: 'numeric'
+                            });
+                            sub.textContent = `📅 Born on ${formatted}`;
+                        } else {
+                            sub.textContent = '✨ A special wish just for you! ✨';
+                        }
+
+                        if (decodedPhone) {
+                            const phoneP = document.createElement('p');
+                            phoneP.style.cssText = `
+                                font-size: clamp(12px, 1.8vw, 18px);
+                                color: #6a2a3a;
+                                margin: 10px 0 0 0;
+                                opacity: 0.8;
+                                font-weight: 500;
+                                position: relative;
+                                z-index: 1;
+                            `;
+                            phoneP.textContent = `📱 ${decodedPhone}`;
+                            messageBox.appendChild(phoneP);
+                        }
+
+                        // Decorative divider with hearts
+                        const divider = document.createElement('div');
+                        divider.style.cssText = `
+                            margin: 12px 0 6px 0;
+                            font-size: 20px;
+                            color: #d6336c;
+                            position: relative;
+                            z-index: 1;
+                        `;
+                        divider.textContent = '💖 💝 💖';
+                        messageBox.appendChild(divider);
+
+                        // Close button with pink theme
+                        const closeBtn = document.createElement('button');
+                        closeBtn.textContent = '✕';
+                        closeBtn.style.cssText = `
+                            position: absolute;
+                            top: 12px;
+                            right: 16px;
+                            background: rgba(255, 255, 255, 0.8);
+                            border: 2px solid #ffb6c1;
+                            border-radius: 50%;
+                            width: 38px;
+                            height: 38px;
+                            font-size: 18px;
+                            cursor: pointer;
+                            color: #d6336c;
+                            font-weight: bold;
+                            transition: all 0.3s ease;
+                            z-index: 2;
+                            box-shadow: 0 2px 10px rgba(255, 77, 122, 0.2);
+                        `;
+                        closeBtn.onmouseover = () => {
+                            closeBtn.style.background = '#d6336c';
+                            closeBtn.style.color = '#fff';
+                            closeBtn.style.transform = 'scale(1.1)';
+                        };
+                        closeBtn.onmouseout = () => {
+                            closeBtn.style.background = 'rgba(255, 255, 255, 0.8)';
+                            closeBtn.style.color = '#d6336c';
+                            closeBtn.style.transform = 'scale(1)';
+                        };
+                        closeBtn.onclick = () => {
+                            overlay.style.opacity = '0';
+                            overlay.style.transition = 'opacity 0.5s';
+                            setTimeout(() => overlay.remove(), 500);
+                        };
+
+                        messageBox.appendChild(closeBtn);
+                        messageBox.appendChild(title);
+                        messageBox.appendChild(sub);
+                        overlay.appendChild(messageBox);
+                        document.body.appendChild(overlay);
+
+                        // Auto-hide after 10 seconds
+                        setTimeout(() => {
+                            if (document.body.contains(overlay)) {
+                                overlay.style.opacity = '0';
+                                overlay.style.transition = 'opacity 1.2s';
+                                setTimeout(() => {
+                                    if (document.body.contains(overlay)) overlay.remove();
+                                }, 1200);
+                            }
+                        }, 10000);
+                    }
+                }
+
+                // Check for shared wish on load
+                handleSharedWish();
+
+                // Also check when URL changes
+                window.addEventListener('popstate', handleSharedWish);
+            });
+        })();
+        </script>
+</body>
+
+</html>
