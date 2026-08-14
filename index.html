@@ -298,48 +298,6 @@ body{
 
 
 /* =====================================================
-   COPY BUTTON
-===================================================== */
-
-.copyBtn{
-
-    margin-top:10px;
-
-    padding:10px 22px;
-
-    border:none;
-
-    border-radius:20px;
-
-    background:
-    linear-gradient(
-        90deg,
-        #ff1493,
-        #ff69b4
-    );
-
-    color:#fff;
-
-    font-size:14px;
-
-    font-weight:bold;
-
-    cursor:pointer;
-
-    box-shadow:
-    0 0 15px
-    rgba(255,20,147,.45);
-
-}
-
-.copyBtn:active{
-
-    transform:scale(.95);
-
-}
-
-
-/* =====================================================
    MATRIX
 ===================================================== */
 
@@ -507,7 +465,6 @@ body{
     position:absolute;
 
     right:20px;
-
     bottom:20px;
 
     z-index:100;
@@ -568,6 +525,39 @@ body{
 
 
 /* =====================================================
+   DEVELOPED BY MEHEDI
+===================================================== */
+
+.developer-credit{
+
+    position:absolute;
+
+    bottom:10px;
+
+    left:50%;
+
+    transform:
+    translateX(-50%);
+
+    z-index:120;
+
+    color:#ff69b4;
+
+    font-size:12px;
+
+    letter-spacing:2px;
+
+    text-shadow:
+    0 0 8px #ff1493,
+    0 0 15px #ff1493;
+
+    opacity:.85;
+
+    white-space:nowrap;
+}
+
+
+/* =====================================================
    ORIENTATION
 ===================================================== */
 
@@ -584,6 +574,7 @@ body{
     #nameScreen{
         display:none;
     }
+
 }
 
 @media (orientation:landscape){
@@ -591,6 +582,7 @@ body{
     #rotateScreen{
         display:none;
     }
+
 }
 
 
@@ -613,6 +605,7 @@ body{
 
         font-size:18px;
     }
+
 }
 
 </style>
@@ -680,16 +673,6 @@ body{
             class="generatedLink"
             readonly>
 
-        <!-- COPY BUTTON -->
-
-        <button
-            id="copyBtn"
-            class="copyBtn">
-
-            📋 Copy Link
-
-        </button>
-
     </div>
 
 </div>
@@ -745,6 +728,13 @@ body{
 
         </button>
 
+    </div>
+
+
+    <!-- DEVELOPED BY -->
+
+    <div class="developer-credit">
+        Developed by Mehedi
     </div>
 
 
@@ -990,86 +980,6 @@ nameInput.addEventListener(
         ){
 
             generateBtn.click();
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   COPY LINK
-===================================================== */
-
-const copyBtn =
-    document.getElementById(
-        "copyBtn"
-    );
-
-
-copyBtn.addEventListener(
-    "click",
-    async function(){
-
-        const link =
-            generatedLink.value.trim();
-
-
-        if(!link){
-
-            alert(
-                "First generate a wish link."
-            );
-
-            return;
-
-        }
-
-
-        try{
-
-            await navigator.clipboard.writeText(
-                link
-            );
-
-
-            copyBtn.textContent =
-                "✅ Copied!";
-
-
-            setTimeout(
-                function(){
-
-                    copyBtn.textContent =
-                        "📋 Copy Link";
-
-                },
-                1500
-            );
-
-
-        }catch(error){
-
-            generatedLink.select();
-
-            document.execCommand(
-                "copy"
-            );
-
-
-            copyBtn.textContent =
-                "✅ Copied!";
-
-
-            setTimeout(
-                function(){
-
-                    copyBtn.textContent =
-                        "📋 Copy Link";
-
-                },
-                1500
-            );
 
         }
 
